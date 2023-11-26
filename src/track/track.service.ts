@@ -1,12 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TrackEntity } from './track.entity';
 import { Repository } from 'typeorm';
 import {
   BusinessError,
   BusinessLogicException,
-} from 'src/shared/errors/business-errors';
-//import { AlbumEntity } from 'src/album/album.entity';
+} from '../shared/errors/business-errors';
 
 @Injectable()
 export class TrackService {
@@ -27,28 +26,19 @@ export class TrackService {
       relations: ['album'],
     });
     if (!track)
-      throw new BusinessLogicException(
-        'The album with the given id was not found',
-        BusinessError.NOT_FOUND,
-      );
+      throw new NotFoundException('The album with the given id was not found');
 
     return track;
   }
 
   // eslint-disable-next-line prettier/prettier
-  async create(track: TrackEntity /*, album: AlbumEntity */ ): Promise<TrackEntity> {
+  async create(track: TrackEntity ): Promise<TrackEntity> {
     if (track.duracion < 0) {
       throw new BusinessLogicException(
         'The track has negative duration',
         BusinessError.PRECONDITION_FAILED,
       );
     }
-    /* if (!album) {
-      throw new BusinessLogicException(
-        'The album dosnt exist',
-        BusinessError.PRECONDITION_FAILED,
-      );
-    } */
     return await this.trackRepository.save(track);
   }
 }

@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PerformerEntity } from './performer.entity';
 import { Repository } from 'typeorm';
 import {
   BusinessError,
   BusinessLogicException,
-} from 'src/shared/errors/business-errors';
+} from '../shared/errors/business-errors';
 
 @Injectable()
 export class PerformerService {
@@ -25,11 +25,7 @@ export class PerformerService {
       where: { id },
       relations: ['albums'],
     });
-    if (!performer)
-      throw new BusinessLogicException(
-        'The album with the given id was not found',
-        BusinessError.NOT_FOUND,
-      );
+    if (!performer) throw new NotFoundException('Performer not found');
 
     return performer;
   }

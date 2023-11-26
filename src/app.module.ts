@@ -8,12 +8,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AlbumEntity } from './album/album.entity';
 import { TrackEntity } from './track/track.entity';
 import { PerformerEntity } from './performer/performer.entity';
+import { PerformerAlbumModule } from './performer-album/performer-album.module';
 
 @Module({
   imports: [
     AlbumModule,
     TrackModule,
     PerformerModule,
+    PerformerAlbumModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
